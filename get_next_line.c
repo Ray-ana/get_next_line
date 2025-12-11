@@ -1,63 +1,103 @@
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rzimaeva <rzimaeva@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/07 15:09:21 by rzimaeva          #+#    #+#             */
+/*   Updated: 2025/12/11 15:06:01 by rzimaeva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-//RACCOURCIR ENLEVER ACCOLADES
-//nettoie ce quon a pris dans la stash jusuquau '\n' et prend tou ce qui suit
-char	*clean_stash(char *stash)
+#include "get_next_line.h"
+
+static char	*ft_strjoin_and_free(char *s1, char *s2)
 {
-	char	*new_stash; //stock ce qui est alloué par substr, après '\n'
-	char	*newline_pos; //pos de départ, à partir de'\n'
-	size_t	len_read; //longueur qui a été lue + '\n',  doit être dégagé
+	char	*new_str;
+
+	new_str = ft_strjoin(s1, s2);
+	if (s1)
+		free(s1);
+	return (new_str);
+}
+
+static char	*fill_stash(char **stash, int fd)
+{
+	char	*buffer;
+	int		bytes_read;
+
+	if (!*stash)
+		*stash = ft_strdup("");
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (free(*stash), *stash = NULL, NULL);
+	bytes_read = 1;
+	while (!ft_strchr(*stash, '\n') && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
+			return (free(buffer), free(*stash), *stash = NULL, NULL);
+		buffer[bytes_read] = '\0';
+		*stash = ft_strjoin_and_free(*stash, buffer);
+		if (!*stash)
+			return (free(buffer), NULL);
+	}
+	free(buffer);
+	return (*stash);
+}
+
+static char	*clean_stash(char *stash)
+{
+	char	*new_stash;
+	char	*newline_pos;
+	size_t	len_read;
 	size_t	len_to_keep;
 
 	if (!stash || ft_strlen(stash) == 0)
-	{
-		free (stash); //au cas où elle a ete allouée avant
+		return (free(stash), NULL);
+	newline_pos = ft_strchr(stash, '\n');
+	if (!newline_pos)
+		return (free(stash), NULL);
+	len_read = (newline_pos - stash) + 1;
+	len_to_keep = ft_strlen(stash) - len_read;
+	if (len_to_keep == 0)
+		return (free(stash), NULL);
+	new_stash = ft_substr(stash, len_read, len_to_keep);
+	free(stash);
+	if (!new_stash)
 		return (NULL);
-	}
-	newline_pos = ft_strchr(stash, '\n'); //nvl ligne, adresse de '\n'
-	if (!newline_pos) //si on trouve pas'\n' car EOF ou jsp, on stop tout
-	{
-		free(stash);
-		return (NULL);
-	}
-	len_read = (newline_pos - stash) + 1; //chars du debut jusquau '\n' inclus (+1) Exemple : Si stash est "Bonjour\nLeReste" (longueur 15), le \n est après l'index 7. len_read sera $7 + 1 = 8$. L'index 8 correspond au 'L' de "LeReste".
-	len_to_keep = ft_strlen(stash) - len_read; //les nv chars qui doivent etre conserves (15-8= 7)
-	if (len_to_keep == 0) //0 ='\n'
-	{
-		free(stash);
-		return (NULL);
-	}
-	//ft_substr(char const *s, unsigned int start, size_t len)
-	new_stash = ft_substr(stash, len_read, len_to_keep); // len_read = apres '\n, on démarre de ce quon a déjà lu //nbr de char à copier
-	free(stash); //libere l'ancien stash
-	if (!new_stash) //gestion des erreurs
-        	return (NULL);
 	return (new_stash);
 }
 
-char	*get_line(char	*stash)
+static char	*get_line(char *stash)
 {
-	char	*line
+	char	*line;
 	char	*new_pos;
 	size_t	len_line;
 
 	if (!stash || ft_strlen(stash) == 0)
+	{
 		free(stash);
 		return (NULL);
+	}
 	new_pos = ft_strchr(stash, '\n');
 	if (new_pos)
-		len_line = (new_pos - stash) + 1 //'\n' //distance entre début stash et  new_pos
+	{
+		len_line = (new_pos - stash) + 1;
+	}
 	else
+	{
 		len_line = ft_strlen(stash);
-	//ft_substr(char const *s, unsigned int start, size_t len)
+	}
 	line = ft_substr(stash, 0, len_line);
-	return (line); //on return le resultat donc la line
+	if (!line)
+	{
+		free(stash);
+		return (NULL);
+	}
+	return (line);
 }
-
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
-#endif
-#define MAX_FD 4096
 
 char	*get_next_line(int fd)
 {
@@ -66,19 +106,22 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
 		return (NULL);
-	//assurer que le stash contient une ligne complète ou que l'EOF a été atteint
-	if (fill_stash(fd, &stash[fd]) == 0)
+	if (!fill_stash(&stash[fd], fd))
 		return (NULL);
-	// récupère la ligne qui va être return
-	line = get_line(stash[fd]);
-	//maj de static char
-	if (!line)
+	if (!stash[fd] || ft_strlen(stash[fd]) == 0)
 	{
-		free(stash[fd])
+		if (stash[fd])
+			free(stash[fd]);
 		stash[fd] = NULL;
 		return (NULL);
 	}
-	//return nv pointeur et free l'ancien
+	line = get_line(stash[fd]);
+	if (!line)
+	{
+		free(stash[fd]);
+		stash[fd] = NULL;
+		return (NULL);
+	}
 	stash[fd] = clean_stash(stash[fd]);
 	return (line);
 }
