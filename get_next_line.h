@@ -6,7 +6,7 @@
 /*   By: rzimaeva <rzimaeva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 15:07:32 by rzimaeva          #+#    #+#             */
-/*   Updated: 2025/12/10 17:26:39 by rzimaeva         ###   ########.fr       */
+/*   Updated: 2025/12/12 16:21:16 by rzimaeva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 # endif
 # define MAX_FD 4096
 
-# include <stdarg.h>
+# include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdio.h>
 
 char	*get_next_line(int fd);
 
