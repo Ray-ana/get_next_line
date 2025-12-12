@@ -118,7 +118,7 @@ char	*get_next_line(int fd)
 	line = get_line(stash[fd]);
 	if (!line)
 	{
-		free(stash[fd]);
+		//free(stash[fd]);
 		stash[fd] = NULL;
 		return (NULL);
 	}
