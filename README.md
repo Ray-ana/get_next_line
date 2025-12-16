@@ -66,3 +66,8 @@ Fonctions que je peux utiliser :
 	normal input = 0
 	normal output = 1
 	error = 2
+		
+	if (!*stash)
+		*stash = ft_strdup("");
+	Si NULL ca segfault car c'est une adresse non allouee, ici, "" est un bloc memoire valide 
+	qui contient un octet '\0' qui peut etre lu, quand on va strlen, ca doit return 0 et non NULL.
