@@ -1,0 +1,11 @@
+Le secret de la vie est 42.
+
+Mon BUFFER_SIZE est 1. J'aime le danger.
+J'ai oublié de `free`.
+J'ai oublié de `free`
+
+Est-ce que cette ligne va se lire en une seule fois ?
+Probablement pas.
+Probablement
+pas.
+Un jour je comprendrai les listes chaînées...
