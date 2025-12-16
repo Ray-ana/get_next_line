@@ -6,7 +6,7 @@
 /*   By: rzimaeva <rzimaeva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 15:09:21 by rzimaeva          #+#    #+#             */
-/*   Updated: 2025/12/12 16:19:48 by rzimaeva         ###   ########.fr       */
+/*   Updated: 2025/12/16 19:13:47 by rzimaeva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static char	*fill_stash(char **stash, int fd)
 
 	if (!*stash)
 		*stash = ft_strdup("");
+	if (!*stash)
+		return (NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (free(*stash), *stash = NULL, NULL);
@@ -83,13 +85,9 @@ static char	*get_line(char *stash)
 	}
 	new_pos = ft_strchr(stash, '\n');
 	if (new_pos)
-	{
 		len_line = (new_pos - stash) + 1;
-	}
 	else
-	{
 		len_line = ft_strlen(stash);
-	}
 	line = ft_substr(stash, 0, len_line);
 	if (!line)
 	{
@@ -101,26 +99,26 @@ static char	*get_line(char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash[MAX_FD];
+	static char	*stash = NULL;
 	char		*line;
 
-	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!fill_stash(&stash[fd], fd))
+	if (!fill_stash(&stash, fd))
 		return (NULL);
-	if (!stash[fd] || ft_strlen(stash[fd]) == 0)
+	if (!stash || ft_strlen(stash) == 0)
 	{
-		if (stash[fd])
-			free(stash[fd]);
-		stash[fd] = NULL;
+		if (stash)
+			free(stash);
+		stash = NULL;
 		return (NULL);
 	}
-	line = get_line(stash[fd]);
+	line = get_line(stash);
 	if (!line)
 	{
-		stash[fd] = NULL;
+		stash = NULL;
 		return (NULL);
 	}
-	stash[fd] = clean_stash(stash[fd]);
+	stash = clean_stash(stash);
 	return (line);
 }
