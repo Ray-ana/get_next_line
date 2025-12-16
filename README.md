@@ -1,10 +1,12 @@
 Definitions importantes :
+
 	- buffer = stockage temporaire pour manipuler ce dont on a besoin
 	- stash = stockage qui permet d'accumuler, grande place, va stocker 
 	  les differents buffer
 
 
-Fontion read() :
+Fonction read() :
+
 	ssize_t read(int fd, void *buf, size_t nbyte);
 	read() renvoie un size_t,  on lui envoie un fd (int entier), 
 	un pointeur sur void et un 2eme size_t nombre de bytes "nbyte".
@@ -15,6 +17,7 @@ Fontion read() :
 
 
 Exemples :
+
 	"|bonjour monsieur" si je mets nbyte a 5, ca va faire "bonjo|ur monsieur"
 	read() va stocker "bonjo" dans le buffer, return (5) et non "bonjo" en toutes lettres.
 	Quand on rappelle read() plus tard, elle va partir de son dernier arret, donc apres le 'o',
@@ -49,6 +52,7 @@ Exemples :
 
 
 Fonctions que je peux utiliser :
+
 	- ft_strjoin(pour mettre les line qu'on a lu a la suite (concatener), elle va construire la stash)
 	- ft_strdup (je vais l'utiliser pour initialiser une string vide(a la place de NULL pour securiser) 
 	- ft_strchr (pour trouver le saut de ligne '\n')
