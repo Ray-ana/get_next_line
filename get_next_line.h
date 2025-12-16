@@ -6,7 +6,7 @@
 /*   By: rzimaeva <rzimaeva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 15:07:32 by rzimaeva          #+#    #+#             */
-/*   Updated: 2025/12/12 16:21:16 by rzimaeva         ###   ########.fr       */
+/*   Updated: 2025/12/16 18:59:57 by rzimaeva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 5
 # endif
-# define MAX_FD 4096
 
 # include <fcntl.h>
 # include <stdlib.h>
