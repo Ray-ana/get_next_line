@@ -1,16 +1,19 @@
-/* ************************************************************************** */
+//* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rzimaeva <rzimaeva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:21:36 by rzimaeva          #+#    #+#             */
-/*   Updated: 2025/12/12 18:25:38 by rzimaeva         ###   ########.fr       */
+/*   Updated: 2025/12/18 14:46:18 by rzimaeva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define PINK "\033[38;5;218m"
 #define RED "\033[0;31m"
@@ -65,24 +68,29 @@ int	main(void)
 	int fd1;
 	int fd2;
 	int fd3;
-	int fd4;
 
-	fd1 = open("tests/file1.txt", O_RDONLY);
-	fd2 = open("tests/file2.txt", O_RDONLY);
-	fd3 = open("tests/file3.txt", O_RDONLY);
-	fd4 = open("tests/empty.txt", O_RDONLY);
+	fd1 = open("file1.txt", O_RDONLY);
+	fd2 = open("file2.txt", O_RDONLY);
+	fd3 = open("file3.txt", O_RDONLY);
 
-	if (fd1 == -1 || fd2 == -1 || fd3 == -1 || fd4 == -1)
+	if (fd1 == -1 || fd2 == -1 || fd3 == -1)
 	{
-		printf(RED "Erreur: Impossible d'ouvrir un ou plusieurs fichiers de test.\n" RESET);
+		printf(RED "Erreur: Impossible d'ouvrir un ou plusieurs fichiers (file1.txt, file2.txt, file3.txt).\n" RESET);
 		return (1);
 	}
+
+	printf(PINK "--- TEST SIMPLE (FILE 1) ---\n" RESET);
 	test_file(fd1);
-	fd1 = open("tests/file1.txt", O_RDONLY);
+
+	fd1 = open("file1.txt", O_RDONLY);
 	if (fd1 == -1)
 		return (1);
+
+	printf(PINK "\n--- TEST ALTERNÉ (FD1 & FD2) ---\n" RESET);
 	test_alternating(fd1, fd2);
+
+	printf(PINK "\n--- TEST SIMPLE (FILE 3) ---\n" RESET);
 	test_file(fd3);
-	test_file(fd4);
+
 	return (0);
 }
