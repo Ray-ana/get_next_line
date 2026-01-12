@@ -1,3 +1,6 @@
+Projet 42 get_next_line :
+	Ce projet consiste à créer une fonction capable de lire et de retourner une ligne terminée par un retour à la 		ligne (\n) depuis un descripteur de fichier (file descriptor).
+
 Definitions importantes :
 
 	- buffer = stockage temporaire pour manipuler ce dont on a besoin
