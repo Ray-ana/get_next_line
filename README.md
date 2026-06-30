@@ -6,8 +6,6 @@ The get_next_line project consists of writing a function in C that reads from a 
 # Instructions
 To compile the project, you need to define the BUFFER_SIZE at compilation time using the -D flag:
 
-        Bash
-
         cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c -o gnl
 
 #   Resources
